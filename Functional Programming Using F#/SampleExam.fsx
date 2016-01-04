@@ -6,9 +6,18 @@ List.fold (+) -1 [1; 2; 3; 4]
 
 // b. -> T ( because int list, in some sence, we convert into int list
 
-([1;2] :> System.Object) :?> int list
 
-// c. -> T? (It is not clear enough from question what it means)
+// :> - upper cast
+// :?> - down cast
+
+([1;2] :> System.Object) :?> int list
+([1;2] :> System.Object) :?> seq<int>
+
+
+(["1"] :> System.Object) :?> string list
+([1;2] :> System.Object) :?> float seq
+
+// c. -> F (Because we can access element by index)
 
 // d. -> T ( lazy tuple does not have type tuple.)
 
@@ -36,7 +45,7 @@ let rec t = seq{ yield 1; yield! t }
 // Even a result was [3,5,7,9] as expected, it is still false because of list notation
 List.map (fun n -> n + 2) [1, 3, 5, 7]
 
-// l. -> F? (I think that it is false, because for every node do not correspond unique label, but I need to read about this more.)
+// l. -> T (Because there is some value in Leafs.)
 type Tree =
     | Leaf of int
     | Node of Tree * Tree
@@ -66,7 +75,7 @@ f (Concat (Concat (Concat (Val "a", Val "b"), Val "c"), Val "d"))
 // STree -> STree
 
 // iii.
-//Make Val in Concat in Right subtree Upperbounded.
+//Make Val in the Right-most Leaf in Concat Uppercases.
 
 // c.
 let rec addBang (x: STree) : STree =
@@ -136,6 +145,10 @@ let rec zip (xs, ys) =
     match xs, ys with
         | [], _ | _, [] -> []
         | x :: xs', y :: ys' -> (x, y) :: zip(xs', ys')
+
+zip ([1;2],[3])
+zip ([1], [2;3])
+zip ([1;2], [3;4])
 
 // d.
 
